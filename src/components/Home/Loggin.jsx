@@ -1,23 +1,29 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import axios from 'axios';
 
 const Loggin = () => {
 
-    const [fromGoogle, setFromGoogle] = useState({});
+    const [data, setData] = useState(null);
 
-    const fetchData = async () => {
-        try {
-            const response = await fetch('/authorization');
-            const data = await response.json();
-            console.log(data);
-        } catch (error) {
-            console.log('Error fetching Google data:', error);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch( 'http://localhost:8000');
+                const result = await response.json();
+                setData(result)
+                console.log(result)
+            } catch (error) {
+                console.log('Error fetching data: ', error)
+            }
         }
-    };
-
-    fetchData();
+       
+       fetchData();
+    }, []);
 
   return (
-    <div>Loggin</div>
+    <div>
+      <p>{data}</p>
+    </div>
   )
 }
 

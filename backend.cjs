@@ -1,45 +1,46 @@
-const PORT = 8000;
-const express = require('express');
-const cors = require('cors');
-const axios = require('axios');
-require('dotenv').config();
+const express = require('express'); 
+const { google } = require('googleapis');
 
 const app = express();
 
-app.use(express.json());
-app.use(cors());
+const PORT = 8000;
 
-app.post('/authorization', async (req, res) => {
-    try {
-        const gapi = await axios.get('https://apis.google.com/js/api.js');
-        const gis = await axios.get('https://accounts.google.com/gsi/client');
+// const calendar = google.calendar({
+//     version : "v3",
+//     auth : "AIzaSyAXpJVR5llvtNJYiWPWPZ_aP38HAqkYr8I"
+// })
 
-        const CLIENT_ID = '750967188620-0a2m9hrpv3bqfg19ie4hlbj1u3id8ost.apps.googleusercontent.com';
-        const API_KEY = 'AIzaSyAXpJVR5llvtNJYiWPWPZ_aP38HAqkYr8I';
-        const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest';
-        const SCOPES = 'https://www.googleapis.com/auth/calendar.readonly';
 
-        let tokenClient;        // Equals Null at this point
+const oauth2Client = new google.auth.OAuth2(
+    '750967188620-0a2m9hrpv3bqfg19ie4hlbj1u3id8ost.apps.googleusercontent.com',
+    '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',
+    'http://localhost:8000/google/redirect'
+);
 
-        gapi.data.load('client', initializeGapiClient);
+const scopes = ['https://www.googleapis.com/auth/calendar'];
 
-        async function initializeGapiClient() {
-            await gapi.client.init({        // Pauses execution until gapi object -> client object -> init function (1 argument), completes.
-                apiKey: API_KEY,
-                discoveryDocs: [DISCOVERY_DOC],
-            });
-        }
+app.get("/google", (req, res) => {
+    const url = oauth2Client.generateAuthUrl({
+        access_type: "offline",
+        scope: scopes,
+    })
 
-        tokenClient = google.accounts.oauth2.initTokenClient({  // Initializes a 'tokenClient' using the initTokenClient method provided by google.accounts.oauth2.
-            client_id: CLIENT_ID,
-            scope: SCOPES,
-            callback: '', // defined on line 89.
-        });
+    res.redirect(url)
+});
 
-        res.json(gapi.data)
-    } catch (error) {
-        res.status(500).json({ error: 'internal server error' })
-    }
+app.get("/google/redirect", (req, res) => {
+    console.log(req)
+    // const code = req.query.code;
+
+    // const {tokens} = await oauth2Client.getToken(code)
+    // oauth2Client.setCredentials(tokens);
+
+    res.send("its working!")
 })
 
-app.listen(8000, () => console.log(`Server is running on port ${PORT}`));
+// app.get('/schedule_event', (req, res) => {
+//     calendar.events
+// })
+
+
+app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));

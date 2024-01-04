@@ -26,6 +26,7 @@ export default function Authorization() {
         apiScript.onload = gapiLoaded;
         scriptsContainer.appendChild(apiScript);
 
+
         const gsiScript = document.createElement('script');
         gsiScript.src = 'https://accounts.google.com/gsi/client';
         gsiScript.async = true;
