@@ -1,0 +1,224 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --green: #438440;
+    --red: #c1121f;
+    --blue: #4285F4;
+    --light-dark: #0D1116;
+    --light-grey: #B7B7B7;
+    --off-white: #E7EDF3;
+
+    --g-font: #3C4043;
+    --g-bg-hover: #EEEEEE;
+}
+
+
+/* 
+--------------------------------------------
+Form 
+--------------------------------------------
+*/
+
+
+/* Save / Edit Button */
+
+
+.buttonSave {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--green);
+    width: 80px;
+    height: 37px;
+    margin: 40px 0 0 83px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.buttonEdit {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: initial;
+    width: 37px;
+    height: 37px;
+    margin: 40px 0 0 104.5px;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+
+/* Input Blue Line */
+
+
+.inactive {
+    background-color: var(--g-font);
+    opacity: 50%;
+    height: 0.5px;
+    margin: 0 8px;
+    transition: all 0.1s ease-out;
+}
+
+.active {
+    background-color: var(--blue);
+    height: 1.5px;
+    opacity: 100%;
+    margin: 0 8px;
+    transition: all 0.2s ease-out;
+}
+
+
+/* Calendar PopUp */
+
+
+#calendarPopUp {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: absolute;
+    top: -8px;
+    background-color: white;
+    box-shadow: 3px 7px 10px rgba(0, 0, 0, 0.33);
+    transition: all 0.3s ease-out;
+    animation: popUpLoad 0.1s ease-out forwards;
+    transform: scaleY(0.75);
+    padding: 8px 0;
+}
+
+@keyframes popUpLoad {
+    0% {transform: scaleY(0.85);}
+    100% {transform: scaleY(1);}
+}
+
+.calendarListItem {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    height: 36px;
+    font-weight: 400;
+    min-width: 100%;
+    color: var(--g-font);
+    padding: 0 8px;
+    white-space: nowrap;
+}
+
+.calendarListItem:hover {
+    background-color: var(--g-bg-hover);
+}
+
+
+/* Color PopUp */
+
+
+#colorPopUp {
+    position: absolute;
+    top: 0;
+    width: 64px;
+    height: 160px;
+    background-color: white;
+    box-shadow: 3px 7px 10px rgba(0, 0, 0, 0.33);
+    cursor: default;
+    transition: all 0.3s ease-out;
+    animation: popUpLoad 0.1s ease-out forwards;
+    transform: scaleY(0.75);
+}
+
+#colorContainer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    padding: 8px;
+}
+
+.colorRow {
+    display: flex;
+    width: 100%;
+    height: 24px;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.colorSelection {
+    height: 18px;
+    width: 18px;
+    border-radius: 9px;
+    background-color: #4285F4;
+}
+
+.colorSelection:hover {
+    transform: scale(1.15);
+    cursor: pointer;
+}
+
+
+/*
+--------------------------------------------
+Clock 
+--------------------------------------------
+*/
+
+
+.start-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 198px;
+    height: 50px;
+    background-color: var(--green);
+    border-radius: 8px;
+    margin-top: 50px;
+    cursor: pointer;
+}
+
+.stop-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 198px;
+    height: 50px;
+    background-color: var(--red);
+    border-radius: 8px;
+    margin-top: 50px;
+    cursor: pointer;
+}
+
+.title-line {
+    width: 334px;
+    height: 0.5px;
+    margin-left: 8px;
+    background-color: var(--light-dark);
+    opacity: 25%;
+}
+
+.activeAdd {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--blue);
+    border-radius: 8px;
+    width: 259px;
+    height: 50px;
+    margin-top: 50px;
+    cursor: pointer;
+}
+
+.inactiveAdd {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--light-dark);
+    border-radius: 8px;
+    width: 259px;
+    height: 50px;
+    margin-top: 50px;
+    cursor: pointer;
+}
