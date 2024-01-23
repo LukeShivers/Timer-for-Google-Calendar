@@ -1,5 +1,5 @@
-import Navbar from '../components/Shared/Navbar.jsx'
-import Hero from '../components/Home/Hero.jsx'
+import Navbar from '../components/Navbar.jsx'
+import Hero from '../components/Hero.jsx'
 
 const Home = () => {
   return (

@@ -1,4 +1,8 @@
-node_modules/
-.env
-backend.cjs
-credentials.json
+client/node_modules/
+client/.eslintrc.cjs
+client/.prettierrc
+
+
+server/node_modules/
+server/.env
+server/views/
