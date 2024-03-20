@@ -1,19 +1,10 @@
-import { useEffect } from 'react';
 import Google from '../assets/Google.svg';
-// import useAuth from '../hooks/useAuth'
-import AuthContext from "../contexts/AuthProvider";
-
-
-/* --------------------------------
-
-
-
--------------------------------- */
-
+import useAuth from '../hooks/useAuth'
 
 
 export default function Authorization() {
-    const { auth, setAuth } = useContext(AuthContext);
+
+    const { setAuth } = useAuth();
 
     async function fetchAuthUrl () {
         const response = await fetch('http://localhost:3000/requests', {
@@ -23,7 +14,7 @@ export default function Authorization() {
         console.log("Auth URL: ", data)
         naviagte(data.url);
 
-        await tokens();
+        // tokens();
         // getCookies();
     }
 
@@ -38,13 +29,8 @@ export default function Authorization() {
             method: 'get'
         });
         const data = await response.json();
-        console.log("credentials: ", data.token)
+        console.log(data)
         setAuth({ data });
-    }
-
-    function test () {
-        setAuth("xuvboienrpbovm")
-        console.log(auth);
     }
 
 
@@ -235,12 +221,6 @@ export default function Authorization() {
                 <div className='flex justify-between items-center w-[214px] h-[50px]'>
                     <img src={Google} alt="/" />
                     <span className='font-semibold font-poppins'>Continue With Google</span>
-                </div>
-            </div>
-
-            <div onClick={test} id="authorize_button" className='flex justify-center items-center w-[250px] h-[50px] py-[12px] px-[18px] bg-off-white rounded-[100px] ml-[154px] mt-[55px] cursor-pointer'>
-                <div className='flex justify-between items-center w-[214px] h-[50px]'>
-                    <span className='font-semibold font-poppins'>Test Reroute</span>
                 </div>
             </div>
         </>

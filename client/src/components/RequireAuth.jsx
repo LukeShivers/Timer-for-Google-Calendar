@@ -1,17 +1,16 @@
-import { useState, useEffect } from 'react';
 import { useLocation, Navigate, Outlet } from "react-router-dom";
 import useAuth from "../hooks/useAuth"
-import AuthContext from "../contexts/AuthProvider";
 
 const RequireAuth = () => {
-    // const { auth } = useAuth();
+    const { auth } = useAuth();
     const location = useLocation();
-    const { auth, setAuth } = useContext(AuthContext);
 
-    console.log("RequireAuth fired");
-    console.log("AUTH = ", auth)
+    // Switch authentication on and off
+    const isAuthenticated = true;
 
     return (
-        auth ? <Outlet /> : <Navigate to="/" state={{ from: location }} replace />
+        isAuthenticated ? <Outlet /> : <Navigate to={"/"} replace state={{ from: location }} />
     );
 }
+
+export default RequireAuth

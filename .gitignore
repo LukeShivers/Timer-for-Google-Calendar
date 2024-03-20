@@ -5,4 +5,4 @@ client/.prettierrc
 
 server/node_modules/
 server/.env
-server/views/
+.DS_Store

@@ -23,25 +23,32 @@ const Form = () => {
 
   let calendarList;
 
-
   // Load Default Calendar in UI
   useEffect(() => {
     async function fetchCalendars () {
-      const response = await fetch('http://localhost:3000/calendar/default')
-      calendarList = await response.json();
-      console.log(calendarList)
-      defaultCalendar(calendarList);
+      // const response = await fetch('http://localhost:3000/calendar/list')
+      // calendarList = await response.json();
+      // console.log(calendarList)
+      // filterCalendars(calendarList);
     }
 
-    function defaultCalendar (calendarList) {
+    function filterCalendars (calendarList) {
       for (let i = 0; i < calendarList.length; i++) {
         if(calendarList[i].primary) {
           setCalendarName(calendarList[i].summary);
+        } else {
+          // parse calendarList[i].summary into dropdown item
         }
       };
     }
 
-    fetchCalendars();
+    async function fetchColor () {
+      // const response = await fetch('http://localhost:3000/calendar/color')
+      // const colorResponse = await response.json();
+    }
+
+    // fetchCalendars();
+    // fetchColor();
   }, [])
 
 

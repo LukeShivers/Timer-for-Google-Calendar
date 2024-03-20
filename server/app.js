@@ -5,14 +5,22 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 
+// Use express
+var app = express();
+
+
+// Use dependencies
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+
+
 // Import routes
 var oauthRouter = require('./routes/oauth');
 var requestsRouter = require('./routes/requests');
 var calendarRouter = require('./routes/calendar');
-
-
-// Use express
-var app = express();
 
 
 // Handle CORS
@@ -24,18 +32,6 @@ app.options('*', function (req, res, next) {
   res.status(200);
   next();
 })
-
-
-// Set default engine
-app.set('view engine', 'jade');
-
-
-// Use dependencies
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 
 
 // Use routes

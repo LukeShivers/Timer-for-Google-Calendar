@@ -3,6 +3,7 @@ var router = express.Router();
 const dotenv = require('dotenv')
 dotenv.config()
 const {OAuth2Client} = require('google-auth-library');
+const { google } = require('googleapis')
 
 
 async function getUserData(access_token) {
@@ -15,66 +16,38 @@ async function getUserData(access_token) {
     }
 }
 
-let clientToken;
-
-// Middleware
-router.use((req, res, next) => {
-    clientToken = null;
-    next();
-})
-
-
-const oAuth2Client = new OAuth2Client(
+const oAuth2Client = new OAuth2Client(                          // Add oAuth2Client
     process.env.CLIENT_ID,
     process.env.CLIENT_SECRET,
-    'http://localhost:3000/oauth'
+    'http://localhost:3000/oauth',
 );
 
+router.use('/', async function (req, res, next) {
+    const requestCode = req.query.code                              // Get the code
 
-// Get token
-router.get('/', async function(req, res, next) {
+    const tokens = await oAuth2Client.getToken(requestCode);        // Get access & refresh tokens out of the request code 
+    await oAuth2Client.setCredentials(tokens);                      // Set credentials for oAuth2Client
 
-    // Get the code
-    const code = req.query.code
+    /* ------------------------------------------------------
+    
+    Problem occurs here, I need to get the oAuth2Client object
+    out of this route, AFTER credentials have been set in it 
+    so that I can use it elsewhere in the project. For example,
+    in the below route (/tokens), which send data back to the 
+    client so the client can open and redirect the app to a
+    protected route. And I also need to send oAuth2CLient to
+    the ./calendar.js file where it can be used to access the
+    google calendar API and get data from / write to that.
 
-    try {
-        // Get tokens out of the code 
-        const tokens = await oAuth2Client.getToken(code);
+    ------------------------------------------------------ */
 
-        // Set token in credentials
-        await oAuth2Client.setCredentials(tokens.tokens);
-        // console.log('credentials', oAuth2Client.credentials);
+    res.redirect('http://localhost:5173/')
+});
 
-        // Update middleware
-        clientToken = await oAuth2Client.credentials.access_token
 
-        // res.cookie('accessToken', user.access_token, { httpOnly: true });
-
-        await getUserData(oAuth2Client.credentials.access_token);
-
-    } catch (error) {
-        console.error('Error during callback handling:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
-
-    res.redirect(303, 'http://localhost:5173/');
+router.get('/tokens', function(req, res, next) {
+    // Wait for req.clientToken to be set
 })
 
-
-router.get('/tokens', async function(req, res, next) {
-    res.header('Access-Control-Allow-Origin', 'http://localhost:5173')
-
-    const waitForToken = () => {
-        if (clientToken) {
-            console.log("/tokens update: ", clientToken);
-            res.json({
-                token: clientToken
-            });
-        } else {
-            setTimeout(waitForToken, 250);
-        }
-    }
-    waitForToken();
-})
 
 module.exports = router;
