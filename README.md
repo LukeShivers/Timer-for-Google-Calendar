@@ -7,7 +7,7 @@ Google Calendar after a given amount of time has passed. Used to organize a user
 calendar and simplify the process of logging past events and time. Built with React 
 frontend, Express.js routing, and Node.js backend. 
 
-<img src="/client/src/assets/heroGraphic.png" alt="Screenshot"/>
+<img src="/client/src/assets/thumbnail.png" alt="thumbnail"/>
 
 
 ## How to contribute to this project
