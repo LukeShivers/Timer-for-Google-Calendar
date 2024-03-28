@@ -146,7 +146,7 @@ const Form = () => {
       'backgroundColor': calendarColorCode,
       'description': descriptionInput,
     };
-    console.log(formData);
+    console.log("Form data: " + formData);
   }
 
   return (

@@ -15,7 +15,7 @@ export default function App() {
 
                 {/* Private Route */}
                 <Route element={<RequireAuth />}>
-                    <Route element={<Timer/>} path="/timer" />
+                    <Route path="/timer" element={<Timer/>} />
                 </Route>
             </Route>
         </Routes>

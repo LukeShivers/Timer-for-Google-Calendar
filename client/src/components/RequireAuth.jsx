@@ -5,11 +5,11 @@ const RequireAuth = () => {
     const { auth } = useAuth();
     const location = useLocation();
 
-    // Switch authentication on and off
+    // Artificially mimick auth state 
     const isAuthenticated = true;
 
     return (
-        isAuthenticated ? <Outlet /> : <Navigate to={"/"} replace state={{ from: location }} />
+        auth ? <Outlet /> : <Navigate to={"/"} replace state={{ from: location }} />
     );
 }
 
