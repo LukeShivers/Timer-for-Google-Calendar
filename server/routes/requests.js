@@ -14,7 +14,7 @@ router.post('/', async function(req, res, next) {
         const oAuth2Client = new OAuth2Client(
             process.env.CLIENT_ID,
             process.env.CLIENT_SECRET,
-            'http://localhost:3000/oauth',
+            'http://localhost:5173',
         )
 
 
