@@ -1,12 +1,15 @@
+import { useEffect } from 'react';
 import Google from '../assets/Google.svg';
 import useAuth from '../hooks/useAuth'
+import { useNavigate } from 'react-router-dom';
 
 
 export default function Authorization() {
 
     const { auth, setAuth } = useAuth();
+    const navigate = useNavigate();
 
-    function navigate (url) {
+    function navWindow (url) {
         window.location.href = url
     }
 
@@ -17,10 +20,10 @@ export default function Authorization() {
         });
         const data = await response.json();
         console.log("Auth URL: ", data);
-        navigate(data.url);
+        navWindow(data.url);
     }
 
-
+    
     async function authenticate () {
         const response = await fetch('http://localhost:3000/oauth', {
             method: 'POST',
@@ -30,8 +33,15 @@ export default function Authorization() {
             body: JSON.stringify({ url: window.location.href })
         });
         const data = await response.json();
-        console.log("Data: ", data);
+        setAuth(data.authorized);
+        navigate('/timer');
     }
+
+    // Left off with the delimea of the auth context and how to get it to pick up in the RequireAuth component
+
+    useEffect(() => {
+        console.log(auth)
+    }, [auth])
 
     
     return (
