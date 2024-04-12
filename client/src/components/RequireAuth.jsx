@@ -6,10 +6,6 @@ const RequireAuth = () => {
     const { auth } = useAuth();
     const location = useLocation();
 
-    useEffect(() => {
-        console.log("Outlet: ", auth)
-    }, [auth])
-
     return (
         auth ? <Outlet /> : <Navigate to={"/"} replace state={{ from: location }} />
     );

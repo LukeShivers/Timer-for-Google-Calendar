@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Authorization() {
 
-    const { auth, setAuth } = useAuth();
+    const { setAuth } = useAuth();
     const navigate = useNavigate();
 
     function navWindow (url) {
@@ -33,15 +33,26 @@ export default function Authorization() {
             body: JSON.stringify({ url: window.location.href })
         });
         const data = await response.json();
-        setAuth(data.authorized);
-        navigate('/timer');
+        if (data.authorized) {
+            setAuth(data.authorized);
+            const codeValue = getQueryParam("code");
+            console.log(codeValue)
+            // navigate(`/timer?code=${codeValue}`);
+        }
     }
 
-    // Left off with the delimea of the auth context and how to get it to pick up in the RequireAuth component
+    // Left off figuring out how to send the code param to the /timer page so I cna then use it to make requests to the backend for Calendar
+
+    function getQueryParam(name) {
+        const url = window.location.href;
+        console.log("Current URL: ", url)
+        const urlParams = new URLSearchParams(url);
+        return urlParams.get(name);
+    }
 
     useEffect(() => {
-        console.log(auth)
-    }, [auth])
+        authenticate();
+    }, [])
 
     
     return (
@@ -50,11 +61,6 @@ export default function Authorization() {
                 <div className='flex justify-between items-center w-[214px] h-[50px]'>
                     <img src={Google} alt="/" />
                     <span className='font-semibold font-poppins'>Continue With Google</span>
-                </div>
-            </div>
-            <div onClick={() => authenticate()} id="authorize_button" className='flex justify-center items-center w-[250px] h-[50px] py-[12px] px-[18px] bg-off-white rounded-[100px] ml-[154px] mt-[55px] cursor-pointer'>
-                <div className='flex justify-between items-center w-[214px] h-[50px]'>
-                    <span className='font-semibold font-poppins'>Authenticate</span>
                 </div>
             </div>
         </>
