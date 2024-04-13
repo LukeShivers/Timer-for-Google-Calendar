@@ -1,12 +1,14 @@
 import { useEffect } from 'react';
 import Google from '../assets/Google.svg';
-import useAuth from '../hooks/useAuth'
+import useAuth from '../hooks/useAuth';
+import useToken from '../hooks/useToken';
 import { useNavigate } from 'react-router-dom';
 
 
 export default function Authorization() {
 
     const { setAuth } = useAuth();
+    const { setToken } = useToken();
     const navigate = useNavigate();
 
     function navWindow (url) {
@@ -30,25 +32,18 @@ export default function Authorization() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ url: window.location.href })
+            body: JSON.stringify({ params: window.location.search })
         });
         const data = await response.json();
-        if (data.authorized) {
-            setAuth(data.authorized);
-            const codeValue = getQueryParam("code");
-            console.log(codeValue)
-            // navigate(`/timer?code=${codeValue}`);
+        console.log(data)
+
+        if (data.token) {
+            setToken(data.token)
+            setAuth(true);
+            navigate('/timer');
         }
     }
-
-    // Left off figuring out how to send the code param to the /timer page so I cna then use it to make requests to the backend for Calendar
-
-    function getQueryParam(name) {
-        const url = window.location.href;
-        console.log("Current URL: ", url)
-        const urlParams = new URLSearchParams(url);
-        return urlParams.get(name);
-    }
+    
 
     useEffect(() => {
         authenticate();

@@ -2,28 +2,43 @@ import { useState, useEffect } from 'react';
 import DropdownArrow from '../assets/dropdownArrow.svg'
 import Pencil from '../assets/Pencil.svg'
 import './styles.css';
+import useToken from '../hooks/useToken';
+
 
 const Form = () => {
 
+  const { token } = useToken();
+
+
   // States
   const [isLineFocused, setIsLineFocused] = useState(false);
+
   const [calendarName, setCalendarName] = useState();
   const [calendarColorCode, setCalendarColorCode] = useState();
   const [titleInput, setTiitleInput] = useState('');
   const [descriptionInput, setDescriptionInput] = useState('');
 
 
-  // Blue line in Input
-  const activeState = () => {
-    setIsLineFocused(true);
-  };
-  const inactiveState = () => {
-    setIsLineFocused(false);
-  };
-
   let calendarList;
 
   // Load Default Calendar in UI
+  async function getDefault () {
+    const response = await fetch('http://localhost:3000/calendar', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ token: token })
+    });
+    const data = await response.json();
+    console.log("calendar data: ", data)
+  }
+
+  useEffect(() => {
+    getDefault();
+  }, [])
+
+
   useEffect(() => {
     async function fetchCalendars () {
       // const response = await fetch('http://localhost:3000/calendar/list')
@@ -50,6 +65,9 @@ const Form = () => {
     // fetchCalendars();
     // fetchColor();
   }, [])
+
+
+
 
 
   // Create Calendar List Popup
@@ -162,7 +180,7 @@ const Form = () => {
 
           <div className="flex flex-col mt-[15px] mx-[25px]">
             <div className="flex flex-col justify-center h-[53px] w-full rounded-[5px] bg-white">
-              <input onFocus={activeState} onBlur={inactiveState}
+              <input onFocus={() => setIsLineFocused(true)} onBlur={() => setIsLineFocused(false)}
               className='pl-[8px] bg-white text- border-none outline-none text-[20px] text-g-font font-roboto'
               type="text" value={titleInput} onChange={handleTitleChange} placeholder="Add title"/>
               <div className={isLineFocused ? 'active' : 'inactive'}></div>

@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 const dotenv = require('dotenv')
 dotenv.config()
-const {OAuth2Client} = require('google-auth-library');
+const {google} = require('googleapis');
 
 
 router.post('/', async function(req, res, next) {
@@ -10,13 +10,13 @@ router.post('/', async function(req, res, next) {
         res.header('Access-Control-Allow-Origin', 'http://localhost:5173')      // Block CORS
         res.header('Referrer-Policy', 'no-referrer-when-downgrade')
 
-  
-        const oAuth2Client = new OAuth2Client(
+
+        const oAuth2Client = new google.auth.OAuth2(
             process.env.CLIENT_ID,
             process.env.CLIENT_SECRET,
             'http://localhost:5173',
         )
-
+        
 
         const scopes = [
             "https://www.googleapis.com/auth/calendar",

@@ -1,18 +1,13 @@
-import { useState, useEffect, useContext } from 'react';
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from 'react';
 import Logo from '../assets/Logo.svg'
 import Github from '../assets/Github.svg'
 import './styles.css';
-import { useLoadContext } from '../contexts/LoadedContext.jsx'
-import { SignOutContext } from '../contexts/SignOutContext.jsx'
 
 
 const Navbar = () => {
 
   // Contexts
-  // const { calLoaded, updateCalLoad} = useLoadContext();
   const calLoaded = true;
-  const { signOut, updateSignOut } = useContext(SignOutContext);
   
 
   // States
@@ -33,9 +28,7 @@ const Navbar = () => {
 
   // On click remove button and call signOut function 
   const signOutClick = (e) => {
-    e.currentTarget.remove();
-    const handleSignOut = signOut;
-    handleSignOut();
+
   }
 
 
