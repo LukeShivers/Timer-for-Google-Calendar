@@ -3,18 +3,8 @@ var router = express.Router();
 const dotenv = require('dotenv')
 dotenv.config()
 const { google } = require('googleapis')
-
-
 var bodyParser = require('body-parser');
 router.use(bodyParser.json());
-
-
-// Set Auth for entire google object
-/*
-google.options({
-    auth: oAuth2Client
-});
-*/
 
 
 const oAuth2Client = new google.auth.OAuth2(
@@ -22,6 +12,12 @@ const oAuth2Client = new google.auth.OAuth2(
     process.env.CLIENT_SECRET,
     'http://localhost:5173',
 )
+
+
+const calendar = google.calendar({
+    version:"v3",
+    auth: oAuth2Client
+})
 
 
 async function getUserData(access_token) {
@@ -42,35 +38,22 @@ router.post('/', async (req, res) => {
     try {
         const tokenModel = req.body.token
         await oAuth2Client.setCredentials(tokenModel)
-        const calendar = google.calendar({
-            version:"v3",
-            auth: oAuth2Client
-        })
+
+
         const calList = await calendar.calendarList.list();
         const calendars = calList.data.items
         let array = [];
         calendars.forEach(element => {
-            array.push(element.summary)
+            array.push({
+                summary: element.summary,
+                backgroundColor: element.backgroundColor,
+                accessRole: element.accessRole,
+                primary: element.primary
+            })
         });
-        console.log(array)
-        // calendars.map((cal, i) => {
-        //     const start = event.start.dateTime || event.start.date;
-        //     console.log(`${start} - ${event.summary}`);
-        // });
-        // const events = res.data.items;
-        // if (!events || events.length === 0) {
-        //     console.log('No upcoming events found.');
-        // }
-
-        // console.log('Upcoming 10 events:');
-        // events.map((event, i) => {
-        //     const start = event.start.dateTime || event.start.date;
-        //     console.log(`${start} - ${event.summary}`);
-        // });
         
-    
         res.json({
-            data: "Good response"
+            data: array
         })
     } catch (err) {
         res.status(500).json({ error: 'Internal /calendar Server Error' });

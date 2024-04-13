@@ -9,20 +9,16 @@ const Form = () => {
 
   const { token } = useToken();
 
-
   // States
-  const [isLineFocused, setIsLineFocused] = useState(false);
-
+  const [focus, setFocus] = useState(false);
   const [calendarName, setCalendarName] = useState();
   const [calendarColorCode, setCalendarColorCode] = useState();
   const [titleInput, setTiitleInput] = useState('');
   const [descriptionInput, setDescriptionInput] = useState('');
+  const [calendarList, setCalendarList] = useState()
 
 
-  let calendarList;
-
-  // Load Default Calendar in UI
-  async function getDefault () {
+  async function fetchCalendars () {
     const response = await fetch('http://localhost:3000/calendar', {
         method: 'POST',
         headers: {
@@ -31,47 +27,34 @@ const Form = () => {
         body: JSON.stringify({ token: token })
     });
     const data = await response.json();
-    console.log("calendar data: ", data)
+    setCalendarList(data.data)
+    setDefault(data.data)
   }
 
-  useEffect(() => {
-    getDefault();
-  }, [])
+
+  function setDefault (userData) {
+    for (let i = 0; i < userData.length; i++) {
+      if (userData[i].primary) {
+        setCalendarName(userData[i].summary);
+      }
+    };
+  }
+
+
+  function parseData (userData) {
+
+  }
 
 
   useEffect(() => {
-    async function fetchCalendars () {
-      // const response = await fetch('http://localhost:3000/calendar/list')
-      // calendarList = await response.json();
-      // console.log(calendarList)
-      // filterCalendars(calendarList);
-    }
-
-    function filterCalendars (calendarList) {
-      for (let i = 0; i < calendarList.length; i++) {
-        if(calendarList[i].primary) {
-          setCalendarName(calendarList[i].summary);
-        } else {
-          // parse calendarList[i].summary into dropdown item
-        }
-      };
-    }
-
-    async function fetchColor () {
-      // const response = await fetch('http://localhost:3000/calendar/color')
-      // const colorResponse = await response.json();
-    }
-
-    // fetchCalendars();
-    // fetchColor();
+    fetchCalendars();
   }, [])
-
-
 
 
 
   // Create Calendar List Popup
   let userColor;
+
   const calendarCreation = (e) => {
     const calendarPopUp = document.createElement('div');
     calendarPopUp.id = "calendarPopUp";
@@ -180,10 +163,10 @@ const Form = () => {
 
           <div className="flex flex-col mt-[15px] mx-[25px]">
             <div className="flex flex-col justify-center h-[53px] w-full rounded-[5px] bg-white">
-              <input onFocus={() => setIsLineFocused(true)} onBlur={() => setIsLineFocused(false)}
+              <input onFocus={() => setFocus(true)} onBlur={() => setFocus(false)}
               className='pl-[8px] bg-white text- border-none outline-none text-[20px] text-g-font font-roboto'
               type="text" value={titleInput} onChange={handleTitleChange} placeholder="Add title"/>
-              <div className={isLineFocused ? 'active' : 'inactive'}></div>
+              <div className={focus ? 'active' : 'inactive'}></div>
             </div>
 
             <div className="flex h-[36px] w-full mt-[25px]">
