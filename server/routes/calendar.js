@@ -4,6 +4,7 @@ const dotenv = require('dotenv')
 dotenv.config()
 const { google } = require('googleapis')
 var bodyParser = require('body-parser');
+const { DateTime } = require('luxon');
 router.use(bodyParser.json());
 
 
@@ -57,6 +58,50 @@ router.post('/', async (req, res) => {
         })
     } catch (err) {
         res.status(500).json({ error: 'Internal /calendar Server Error' });
+    }
+})
+
+
+router.post('/create', (req, res) => {
+    res.header('Access-Control-Allow-Origin', 'http://localhost:5173')      // Block CORS
+    res.header('Referrer-Policy', 'no-referrer-when-downgrade')
+
+    try {
+        const client = req.body
+
+        const iananTimeZone = DateTime.local().zoneName;
+        
+        const event = {
+            'summary': client.title,
+            'description': client.description,
+            'start': {
+                'dateTime': client.startTime,
+                'timeZone': iananTimeZone,
+            },
+            'end': {
+                'dateTime': client.endTime,
+                'timeZone': iananTimeZone,
+            },
+        };
+
+
+        calendar.events.insert({
+            calendarId: 'primary',
+            resource: event,
+        }, function(err, event) {
+            if (err) {
+                console.log('There was an error contacting the Calendar service: ' + err);
+                return;
+            }
+            console.log('Event created: %s', event.htmlLink);
+        });
+
+
+        res.json({
+            data: "successful return"
+        })
+    } catch (err) {
+        res.status(500).json({ error: 'Internal /calendar/create Server Error' });
     }
 })
 

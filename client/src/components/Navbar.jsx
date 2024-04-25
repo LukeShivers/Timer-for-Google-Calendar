@@ -28,7 +28,6 @@ const Navbar = () => {
 
   // On click remove button and call signOut function 
   const signOutClick = (e) => {
-
   }
 
 

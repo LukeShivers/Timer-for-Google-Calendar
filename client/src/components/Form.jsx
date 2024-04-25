@@ -5,150 +5,136 @@ import './styles.css';
 import useToken from '../hooks/useToken';
 
 
-const Form = () => {
+const Form = ({updateFormData}) => {
 
   const { token } = useToken();
 
   // States
-  const [focus, setFocus] = useState(false);
-  const [calendarName, setCalendarName] = useState();
   const [calendarColorCode, setCalendarColorCode] = useState();
   const [titleInput, setTiitleInput] = useState('');
   const [descriptionInput, setDescriptionInput] = useState('');
-  const [calendarList, setCalendarList] = useState()
+
+  const [displayed, setDisplayed] = useState();
+  const [focus, setFocus] = useState(false);
+  const [userData, setUserData] = useState();
+  const [width, setWidth] = useState()
+  const [visibility, setVisibility] = useState("none")
+  const [colorVis, setColorVis] = useState("none")
 
 
-  async function fetchCalendars () {
-    const response = await fetch('http://localhost:3000/calendar', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ token: token })
-    });
-    const data = await response.json();
-    setCalendarList(data.data)
-    setDefault(data.data)
+  useEffect(() => {
+    async function fetchCalendars () {
+      const response = await fetch('http://localhost:3000/calendar', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ token: token })
+      });
+      const data = await response.json()
+      const scrubbed = filterData(data.data)
+      console.log(scrubbed);
+      setUserData(scrubbed)
+      setDefault(scrubbed)
+    }
+    fetchCalendars();
+
+  }, [])
+
+
+  function filterData(rawData) {
+    const filteredData = [];
+    rawData.forEach(item => {
+      if (item.accessRole == "owner") {
+        filteredData.push(item)
+      }
+    })
+    return filteredData
   }
 
 
-  function setDefault (userData) {
-    for (let i = 0; i < userData.length; i++) {
-      if (userData[i].primary) {
-        setCalendarName(userData[i].summary);
+  function setDefault (data) {
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].primary) {
+        setDisplayed(data[i].summary);
+        setCalendarColorCode(data[i].backgroundColor)
       }
     };
   }
 
 
-  function parseData (userData) {
+  function handleMainClick(e) {
+    setWidth(e.currentTarget.offsetWidth);
+    visibility == "flex" ? setVisibility("none") : setVisibility("flex")
+  };
 
+
+  function handleSelection(e) {
+    setDisplayed(e.target.textContent);
+    // set the color to the corresponding color
+  }
+  
+
+  const colorData = [
+    {
+      Tomato: '#C4291C',
+      Flamingo: '#D98177'
+    },
+    {
+      Tangerine: '#E35D33',
+      Banana: '#EEC04C'
+    },
+    {
+      Sage: '#5DB37E',
+      Basil: '#397E49'
+    },
+    {
+      Peacock: '#429ADF',
+      Blueberry: '#4153AF'
+    },
+    {
+      Lavendar: '#7B87C6',
+      Grape: '#8331A4'
+    },
+    {
+      Graphite: '#616161',
+    }
+  ]; 
+
+
+  function handleColorClick() {
+    colorVis == "flex" ? setColorVis("none") : setColorVis("flex")
   }
 
 
-  useEffect(() => {
-    fetchCalendars();
-  }, [])
-
-
-
-  // Create Calendar List Popup
-  let userColor;
-
-  const calendarCreation = (e) => {
-    const calendarPopUp = document.createElement('div');
-    calendarPopUp.id = "calendarPopUp";
-    calendarPopUp.style.height = `Math((${calendarList.length} * 36 + 16)px)`;
-    e.currentTarget.appendChild(calendarPopUp);
-    let currentWidth = e.currentTarget.offsetWidth;
-
-
-    for (let i = 0; i < calendarList.length; i++) {
-      const calendarItem = document.createElement('span');
-      calendarItem.innerHTML = calendarList[i].summary;
-      calendarItem.classList.add("calendarListItem");
-      calendarItem.style.width = `${currentWidth}px`;
-      calendarItem.id = calendarList[i].summary;
-      calendarPopUp.appendChild(calendarItem);
-
-      calendarItem.addEventListener('click', () => {
-        setCalendarName(calendarList[i].summary);
-        userColor = calendarList[i].backgroundColor;
-        setCalendarColorCode(userColor);
-        calendarPopUp.remove();
-      });
-    };
-  };
-
-
-  // Create Color Grid Popup
-  const colorCreation = (e) => {
-    let colorPallet = [
-      '#C4291C', '#D98177',
-      '#E35D33', '#EEC04C',
-      '#5DB37E', '#397E49',
-      '#429ADF', '#4153AF',
-      '#7B87C6', '#8331A4',
-      '#616161', userColor
-    ]; 
-    let colorSelectionArray = [];
-    const colorPopUp = document.createElement('div');
-    colorPopUp.id = "colorPopUp";
-    e.currentTarget.appendChild(colorPopUp);
-
-    const colorContainer = document.createElement('div');
-    colorContainer.id = "colorContainer";
-    colorPopUp.appendChild(colorContainer);
-
-    for (let i = 0; i < 6; i++) {
-      const colorRow = document.createElement('div');
-      colorRow.classList.add('colorRow');
-      colorContainer.appendChild(colorRow);
-
-      for (let i = 0; i < 2; i++) {
-        const colorSelection = document.createElement('div');
-        colorSelection.classList.add('colorSelection');
-        colorSelectionArray.push(colorSelection);
-        colorRow.appendChild(colorSelection);
-
-        colorSelection.addEventListener('click', () => {
-          setCalendarColorCode(colorSelection.style.backgroundColor);
-          colorPopUp.remove();
-        });
-      };
-    };
-
-    for (let i = 0; i < colorSelectionArray.length; i++) {
-      colorSelectionArray[i].style.backgroundColor = colorPallet[i];
-    };
-  };
-
+  function handleColorSelection(e) {
+    setCalendarColorCode(e.currentTarget.style.backgroundColor);
+  }
 
   // Update Title Chnage
   const handleTitleChange = (e) => {
     setTiitleInput(e.target.value)
   };
 
-
   // Update Description Change
   const handleDescriptionChange = (e) => {
     setDescriptionInput(e.target.value);
   };
 
-
   // Save / Edit Button
-  const handleSave = (e) => {
+  function handleSave(e) {
     e.currentTarget.classList.toggle("buttonEdit");
     let saveOrEdit = e.currentTarget.firstElementChild;
     saveOrEdit.textContent === "Save" ? saveOrEdit.textContent = "Edit" : saveOrEdit.textContent = "Save";
-    let formData = {
-      'title': titleInput,
-      'summary': calendarName,
-      'backgroundColor': calendarColorCode,
-      'description': descriptionInput,
-    };
-    console.log("Form data: " + formData);
+
+    updateFormData({
+      title: titleInput,
+      summary: displayed,
+      backgroundColor: calendarColorCode,
+      description: descriptionInput
+    })
   }
+
 
   return (
     <>
@@ -170,15 +156,32 @@ const Form = () => {
             </div>
 
             <div className="flex h-[36px] w-full mt-[25px]">
-              <div onClick={calendarCreation} 
-                className="relative flex items-center rounded-[5px] bg-white cursor-pointer">
-                <span className='font-[14px] font-regular p-[8px] text-g-font font-roboto whitespace-nowrap'>{calendarName}</span>
+              <div onClick={handleMainClick} className="relative flex items-center rounded-[5px] bg-white cursor-pointer">
+                <span className='font-[14px] font-regular p-[8px] text-g-font font-roboto whitespace-nowrap'>{displayed}</span>
                 <img src={DropdownArrow} alt="^" className="mr-[8px]"/>
+                {userData && userData.length > 0 && (
+                  <div id="calendarPopUp" style={{ height: `${(userData.length * 36 + 16)}px`, width: `${width}px`, display: visibility}}>
+                    {userData.map(item => (
+                      <span key={item.summary} onClick={handleSelection} className="calendarListItem">{item.summary}</span>
+                    ))}
+                  </div>
+                )}
               </div>
-              <div onClick={colorCreation} 
-                className="relative flex items-center justify-center rounded-[5px] w-[60px] ml-[25px] bg-white cursor-pointer">
+              <div onClick={handleColorClick} className="relative flex items-center justify-center rounded-[5px] w-[60px] ml-[25px] bg-white cursor-pointer">
                 <div style={{ backgroundColor: calendarColorCode}} id="colorDisplay" className='w-[18px] h-[18px] rounded-[9px] m-[3px]'></div>
                 <img src={DropdownArrow} alt="^" className="px-[5px] py-[7px]"/>
+
+                <div id="colorPopUp" style={{display: colorVis}}>
+                  <div id="colorContainer">
+                    {colorData.map((item, index) => (
+                      <div key={index} className="colorRow">
+                        {Object.entries(item).map((name, color) => (
+                          <div key={name} onClick={handleColorSelection} style={{ backgroundColor: name[1] }} className="colorSelection"></div>
+                        ))}
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
             <textarea className='pl-[8px] pt-[13px] border-none outline-none text-[14px] font-medium text-g-font font-roboto h-[176px] mt-[25px] rounded-[5px] bg-white' 
