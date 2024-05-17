@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import useAuth from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import Logo from "../assets/Logo.svg";
@@ -6,13 +5,12 @@ import Github from "../assets/Github.svg";
 import "./styles.css";
 
 const Navbar = () => {
-
   const { auth, setAuth } = useAuth();
   const navigate = useNavigate();
-  
-  function signOutClick () {
-    setAuth(false)
-    navigate("/")
+
+  function signOutClick() {
+    setAuth(false);
+    navigate("/");
   }
 
   return (

@@ -4,7 +4,7 @@ import Pencil from "../assets/Pencil.svg";
 import "./styles.css";
 import useToken from "../hooks/useToken";
 
-const Form = ({ updateFormData }) => {
+const Form = ({ updateFormData, complete }) => {
   const { token } = useToken();
 
   // States

@@ -2,7 +2,8 @@ client/node_modules/
 client/.eslintrc.cjs
 client/.prettierrc
 
-
 server/node_modules/
 server/.env
 .DS_Store
+
+.vscode
