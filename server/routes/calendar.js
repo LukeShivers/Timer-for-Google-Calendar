@@ -1,109 +1,114 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
-const dotenv = require('dotenv')
-dotenv.config()
-const { google } = require('googleapis')
-var bodyParser = require('body-parser');
-const { DateTime } = require('luxon');
+const dotenv = require("dotenv");
+dotenv.config();
+const { google } = require("googleapis");
+var bodyParser = require("body-parser");
 router.use(bodyParser.json());
-
+const { DateTime } = require("luxon");
 
 const oAuth2Client = new google.auth.OAuth2(
-    process.env.CLIENT_ID,
-    process.env.CLIENT_SECRET,
-    'http://localhost:5173',
-)
-
+  process.env.CLIENT_ID,
+  process.env.CLIENT_SECRET,
+  "http://localhost:5173"
+);
 
 const calendar = google.calendar({
-    version:"v3",
-    auth: oAuth2Client
-})
+  version: "v3",
+  auth: oAuth2Client,
+});
 
-
+/*
 async function getUserData(access_token) {
-    try {
-        const response = await fetch(`https://www.googleapis.com/oauth2/v3/userinfo?access_token=${access_token}`);
-        const data = await response.json();
-        console.log('data',data);
-    } catch (error) {
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
+  try {
+    const response = await fetch(
+      `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${access_token}`
+    );
+    const data = await response.json();
+    console.log("data", data);
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 }
+*/
 
+router.post("/", async (req, res) => {
+  res.header("Access-Control-Allow-Origin", "http://localhost:5173"); // Block CORS
+  res.header("Referrer-Policy", "no-referrer-when-downgrade");
 
-router.post('/', async (req, res) => {
-    res.header('Access-Control-Allow-Origin', 'http://localhost:5173')      // Block CORS
-    res.header('Referrer-Policy', 'no-referrer-when-downgrade')
+  try {
+    // Set Credentials
+    const tokenModel = req.body.token;
+    await oAuth2Client.setCredentials(tokenModel);
 
-    try {
-        const tokenModel = req.body.token
-        await oAuth2Client.setCredentials(tokenModel)
+    // Get Calendar Data
+    const calList = await calendar.calendarList.list();
+    const calendars = calList.data.items;
 
+    // Scrape useful data
+    let array = [];
+    calendars.forEach((element) => {
+      array.push({
+        summary: element.summary,
+        backgroundColor: element.backgroundColor,
+        accessRole: element.accessRole,
+        primary: element.primary,
+      });
+    });
 
-        const calList = await calendar.calendarList.list();
-        const calendars = calList.data.items
-        let array = [];
-        calendars.forEach(element => {
-            array.push({
-                summary: element.summary,
-                backgroundColor: element.backgroundColor,
-                accessRole: element.accessRole,
-                primary: element.primary
-            })
-        });
-        
-        res.json({
-            data: array
-        })
-    } catch (err) {
-        res.status(500).json({ error: 'Internal /calendar Server Error' });
-    }
-})
+    // Submit filtered data
+    res.status(200).json({
+      data: array,
+    });
+  } catch (err) {
+    res.status(500).json({ error: "Internal /calendar Server Error" });
+  }
+});
 
+router.post("/create", (req, res) => {
+  res.header("Access-Control-Allow-Origin", "http://localhost:5173"); // Block CORS
+  res.header("Referrer-Policy", "no-referrer-when-downgrade");
 
-router.post('/create', (req, res) => {
-    res.header('Access-Control-Allow-Origin', 'http://localhost:5173')      // Block CORS
-    res.header('Referrer-Policy', 'no-referrer-when-downgrade')
+  try {
+    const client = req.body;
 
-    try {
-        const client = req.body
+    const iananTimeZone = DateTime.local().zoneName;
 
-        const iananTimeZone = DateTime.local().zoneName;
-        
-        const event = {
-            'summary': client.title,
-            'description': client.description,
-            'start': {
-                'dateTime': client.startTime,
-                'timeZone': iananTimeZone,
-            },
-            'end': {
-                'dateTime': client.endTime,
-                'timeZone': iananTimeZone,
-            },
-        };
+    const event = {
+      summary: client.title,
+      description: client.description,
+      start: {
+        dateTime: client.startTime,
+        timeZone: iananTimeZone,
+      },
+      end: {
+        dateTime: client.endTime,
+        timeZone: iananTimeZone,
+      },
+    };
 
+    calendar.events.insert(
+      {
+        calendarId: "primary",
+        resource: event,
+      },
+      function (err, event) {
+        if (err) {
+          console.log(
+            "There was an error contacting the Calendar service: " + err
+          );
+          return;
+        }
+        console.log("Event created: %s", event.htmlLink);
+      }
+    );
 
-        calendar.events.insert({
-            calendarId: 'primary',
-            resource: event,
-        }, function(err, event) {
-            if (err) {
-                console.log('There was an error contacting the Calendar service: ' + err);
-                return;
-            }
-            console.log('Event created: %s', event.htmlLink);
-        });
-
-
-        res.json({
-            data: "successful return"
-        })
-    } catch (err) {
-        res.status(500).json({ error: 'Internal /calendar/create Server Error' });
-    }
-})
-
+    res.json({
+      data: "successful return",
+    });
+  } catch (err) {
+    res.status(500).json({ error: "Internal /calendar/create Server Error" });
+  }
+});
 
 module.exports = router;

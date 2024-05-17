@@ -1,64 +1,49 @@
-import { useState, useEffect } from 'react';
-import Logo from '../assets/Logo.svg'
-import Github from '../assets/Github.svg'
-import './styles.css';
-
+import { useState, useEffect } from "react";
+import useAuth from "../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
+import Logo from "../assets/Logo.svg";
+import Github from "../assets/Github.svg";
+import "./styles.css";
 
 const Navbar = () => {
 
-  // Contexts
-  const calLoaded = true;
+  const { auth, setAuth } = useAuth();
+  const navigate = useNavigate();
   
-
-  // States
-  const [signedIn, setSignedIn] = useState(false);
-
-
-  // Ever 100ms check if user signed in
-  let timeoutId;
-  const checkIfLoaded = () => {
-    if (calLoaded !== null) {
-      setSignedIn(true);
-      clearTimeout(timeoutId);
-    } else {
-      timeoutId = setTimeout(checkIfLoaded, 100);
-    }
+  function signOutClick () {
+    setAuth(false)
+    navigate("/")
   }
-
-
-  // On click remove button and call signOut function 
-  const signOutClick = (e) => {
-  }
-
-
-  // Call main function initially and if load status changes
-  useEffect(() => {
-    checkIfLoaded();
-    return () => {
-      clearTimeout(timeoutId);
-    };
-  }, [calLoaded]);
-
 
   return (
-    <div className='flex justify-between items-center w-[calc(100% - 180px)] h-[75px] mt-[50px] mx-[90px] bg-light-dark rounded-[10px] border-solid border-[rgba(183,183,183,0.5)] border-[0.8px]'>
+    <div className="w-[calc(100% - 180px)] mx-[90px] mt-[50px] flex h-[75px] items-center justify-between rounded-[10px] border-[0.8px] border-solid border-[rgba(183,183,183,0.5)] bg-light-dark">
       <a href="/">
-        <img src={Logo} alt="logo" className='ml-[50px]'
-        />
+        <img src={Logo} alt="logo" className="ml-[50px]" />
       </a>
-      <div className="flex items-center mr-[50px]">
-        <a href='https://github.com/LukeShivers/Timer-for-Google-Calendar' target="_blank" className='flex items-center w-[166px] h-[40px] rounded-[8px] border-solid border-light-grey border-[1.5px]'>
-          <div className='flex w-full justify-between mx-[15px]'>
-            <span className='font-normal text-light-grey font-poppins'>Source Code</span>
-            <img src={Github} alt="icon"/>
+      <div className="mr-[50px] flex items-center">
+        <a
+          href="https://github.com/LukeShivers/Timer-for-Google-Calendar"
+          target="_blank"
+          className="flex h-[40px] w-[166px] items-center rounded-[8px] border-[1.5px] border-solid border-light-grey"
+        >
+          <div className="mx-[15px] flex w-full justify-between">
+            <span className="font-poppins font-normal text-light-grey">
+              Source Code
+            </span>
+            <img src={Github} alt="icon" />
           </div>
         </a>
-        {signedIn && (
-          <div id='signoutBtn' onClick={signOutClick} className="flex justify-center items-center w-[105px] h-[40px] text-light-grey font-normal border-solid border-[1.5px] border-light-grey rounded-[8px] ml-[50px] font-poppins cursor-pointer">Sign Out</div>
-        )}
+        <div
+          id="signoutBtn"
+          onClick={signOutClick}
+          className="ml-[50px] flex h-[40px] w-[105px] cursor-pointer items-center justify-center rounded-[8px] border-[1.5px] border-solid border-light-grey font-poppins font-normal text-light-grey"
+          style={auth ? { display: "visible" } : { display: "none" }}
+        >
+          Sign Out
+        </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;
