@@ -1,13 +1,13 @@
 const Footer = () => {
   return (
-    <div className="flex h-[100px] w-screen items-center justify-center border-t-[0.8px] border-[rgba(183,183,183,0.5)] bg-light-dark">
+    <div className="absolute bottom-0 flex h-[10rem] w-screen items-center justify-center border-t-[0.08rem] border-[rgba(183,183,183,0.5)] bg-light-dark">
       <div>
         <div>
-          <span className="pr-[6px] font-poppins text-[13px] font-normal italic text-light-grey">
+          <span className="pr-[0.6rem] font-poppins text-[1.3rem] font-normal italic text-light-grey">
             Designed and built by
           </span>
           <a href="https://github.com/LukeShivers" target="_blank">
-            <span className="font-poppins text-[13px] font-normal italic text-blue">
+            <span className="font-poppins text-[1.3rem] font-normal italic text-blue">
               Luke Shivers
             </span>
           </a>
@@ -15,12 +15,12 @@ const Footer = () => {
         <a
           href="https://github.com/LukeShivers/Timer-for-Google-Calendar"
           target="_blank"
-          className="flex justify-center pt-[8px]"
+          className="flex justify-center pt-[0.8rem]"
         >
-          <div className="pr-[10px]">
+          <div className="pr-[1rem]">
             <svg
-              width="17"
-              height="17"
+              width="1.7rem"
+              height="1.7rem"
               viewBox="0 0 17 17"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
@@ -33,7 +33,7 @@ const Footer = () => {
               />
             </svg>
           </div>
-          <span className="font-poppins text-[13px] font-normal text-light-grey">
+          <span className="font-poppins text-[1.3rem] font-normal text-light-grey">
             This Project
           </span>
         </a>

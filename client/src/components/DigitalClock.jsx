@@ -78,7 +78,7 @@ const DigitalClock = ({ formData, updateComplete, complete }) => {
   }
 
   return (
-    <div className="ml-[78px] mt-[85px] flex flex-col">
+    <div className="ml-[78px] flex flex-col">
       <div className="flex gap-[25px]">
         <div className="flex h-[300px] w-[300px] items-center justify-center rounded-[30px] bg-light-dark">
           <div className="font-poppins text-[230px] font-extrabold tracking-[-5px] text-light-grey">

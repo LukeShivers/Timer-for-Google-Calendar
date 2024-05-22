@@ -68,6 +68,12 @@ const Form = ({ updateFormData, complete }) => {
     setCalendarColorCode(userDataItem.backgroundColor);
   }
 
+  function mobileSelection(e) {
+    const first = e.currentTarget.querySelector(".mobileContainer");
+    setDisplayed(first.querySelector("span").textContent);
+    setCalendarColorCode(first.querySelector("div").style.backgroundColor);
+  }
+
   const colorData = [
     {
       Tomato: "#C4291C",
@@ -118,6 +124,12 @@ const Form = ({ updateFormData, complete }) => {
     setCalendarColorCode(hexColor);
   }
 
+  function mobileColorSelection(e) {
+    const rgbColor = e.currentTarget.querySelector("div").style.backgroundColor;
+    var hexColor = rgbStringToHex(rgbColor);
+    setCalendarColorCode(hexColor);
+  }
+
   const handleTitleChange = (e) => {
     setTiitleInput(e.target.value);
   };
@@ -146,79 +158,164 @@ const Form = ({ updateFormData, complete }) => {
   }
 
   return (
-    <>
-      <div
-        className="absolute ml-[90px] mt-[85px] h-[467px] w-[400px] rounded-[10px] bg-light-dark opacity-50"
-        style={saved ? { display: "flex" } : { display: "none" }}
-      ></div>
-      <div className="ml-[90px] mt-[85px] flex h-[467px] w-[400px] flex-col rounded-[10px] bg-light-dark">
-        <div className="flex">
-          <h1 className="pl-[25px] pt-[33px] font-poppins text-[36px] font-bold text-white">
-            Add Event
-          </h1>
-          <div onClick={handleSave} className="buttonSave relative">
-            <span className="block font-poppins text-[14px] font-medium text-off-white">
-              Save
-            </span>
-            <img src={Pencil} alt="" className="hidden h-[30px] w-[30px]" />
-          </div>
+    <div className="flex h-[46.7rem] w-[40rem] flex-col rounded-[1rem] bg-light-dark mobile:mt-[2.4rem] mobile:h-[39.695rem] mobile:w-[34rem]">
+      <div className="flex items-center pl-[2.5rem] pt-[3.3rem] mobile:pl-[2.125rem] mobile:pt-[2.7rem]">
+        <h1 className="font-poppins text-[3.6rem] font-bold text-white mobile:text-[3.06rem]">
+          Add Event
+        </h1>
+        <div onClick={handleSave} className="buttonSave">
+          <span className="block font-poppins text-[1.4rem] font-medium text-off-white mobile:text-[1.19rem]">
+            Save
+          </span>
+          <img
+            src={Pencil}
+            alt="pencil"
+            className="hidden h-[3rem] w-[3rem] mobile:h-[2.55rem] mobile:w-[2.55rem]"
+          />
+        </div>
+      </div>
+
+      <div className="mx-[2.5rem] mt-[1.5rem] flex flex-col mobile:mx-[2.125rem] mobile:mt-[1.275rem]">
+        <div className="flex h-[5.3rem] w-full flex-col justify-center rounded-[0.5rem] bg-white mobile:h-[4.505rem] mobile:rounded-[0.425rem]">
+          <input
+            onFocus={() => setFocus(true)}
+            onBlur={() => setFocus(false)}
+            className="text- border-none bg-white pl-[0.8rem] font-roboto text-[2rem] text-g-font outline-none mobile:pl-[0.68rem] mobile:text-[1.7rem]"
+            type="text"
+            value={titleInput}
+            onChange={handleTitleChange}
+            placeholder="Add title"
+          />
+          <div className={focus ? "active" : "inactive"}></div>
         </div>
 
-        <div className="mx-[25px] mt-[15px] flex flex-col">
-          <div className="flex h-[53px] w-full flex-col justify-center rounded-[5px] bg-white">
-            <input
-              onFocus={() => setFocus(true)}
-              onBlur={() => setFocus(false)}
-              className="text- border-none bg-white pl-[8px] font-roboto text-[20px] text-g-font outline-none"
-              type="text"
-              value={titleInput}
-              onChange={handleTitleChange}
-              placeholder="Add title"
+        <div className="mt-[2.5rem] flex h-[3.6rem] w-full mobile:mt-[2.125rem] mobile:h-[3.06rem]">
+          {/* Calendar Display */}
+          <div
+            onClick={handleMainClick}
+            className="flex cursor-pointer items-center rounded-[0.5rem] bg-white"
+          >
+            {/* Default View */}
+            <span className="font-regular whitespace-nowrap p-[0.8rem] font-roboto text-[1.4rem] text-g-font mobile:p-[0.68rem] mobile:text-[1.19rem]">
+              {displayed}
+            </span>
+            <img
+              src={DropdownArrow}
+              alt="^"
+              className="mr-[0.8rem] w-[1rem] mobile:mr-[0.68rem] mobile:w-[0.85rem]"
             />
-            <div className={focus ? "active" : "inactive"}></div>
-          </div>
-
-          <div className="mt-[25px] flex h-[36px] w-full">
-            <div
-              onClick={handleMainClick}
-              className=" flex cursor-pointer items-center rounded-[5px] bg-white"
-            >
-              <span className="font-regular whitespace-nowrap p-[8px] font-roboto font-[14px] text-g-font">
-                {displayed}
-              </span>
-              <img src={DropdownArrow} alt="^" className="mr-[8px]" />
-              {userData && userData.length > 0 && (
-                <div
-                  id="calendarPopUp"
-                  style={{
-                    height: `${userData.length * 36 + 16}px`,
-                    width: `${width}px`,
-                    display: calVis,
-                  }}
-                >
-                  {userData.map((item) => (
-                    <span
-                      key={item.summary}
-                      onClick={(e) => handleSelection(item, e)}
-                      className="calendarListItem"
-                    >
-                      {item.summary}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </div>
-            <div
-              onClick={handleColorClick}
-              className=" ml-[25px] flex w-[60px] cursor-pointer items-center justify-center rounded-[5px] bg-white"
-            >
+            {/* Mobile View */}
+            {window.innerWidth <= 600 && userData && (
               <div
-                style={{ backgroundColor: calendarColorCode }}
-                id="colorDisplay"
-                className="m-[3px] h-[18px] w-[18px] rounded-[9px]"
-              ></div>
-              <img src={DropdownArrow} alt="^" className="px-[5px] py-[7px]" />
-
+                style={{
+                  height: `${userData.length * 3.7}rem`,
+                  display: calVis,
+                }}
+                className="absolute right-[1.3rem] hidden w-[20rem] flex-col rounded-[1rem] bg-[#21272D]"
+              >
+                {userData.map((item, index) => (
+                  <div
+                    onClick={mobileSelection}
+                    key={item.summary}
+                    className=""
+                  >
+                    {index !== 0 && (
+                      <div className="mt-[1rem] h-[0.025rem] w-[20rem] bg-off-white opacity-50"></div>
+                    )}
+                    <div
+                      className="mobileContainer ml-[2.6rem] mt-[1rem] flex w-[15.8rem] items-center justify-between"
+                      key={index}
+                    >
+                      <span className="font-poppins text-[1.1rem] font-medium text-off-white">
+                        {item.summary}
+                      </span>
+                      <div
+                        style={{
+                          backgroundColor: item.backgroundColor,
+                        }}
+                        className="h-[1.1rem] w-[1.1rem] rounded-[0.2rem]"
+                      ></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+            {/* Desktop Display */}
+            {window.innerWidth >= 600 && userData && userData.length > 0 && (
+              <div
+                id="calendarPopUp"
+                style={{
+                  height: `${userData.length * 3.6 + 1.6}rem`,
+                  width: `${width / 10}rem`,
+                  display: calVis,
+                }}
+              >
+                {userData.map((item) => (
+                  <span
+                    key={item.summary}
+                    onClick={(e) => handleSelection(item, e)}
+                    className="calendarListItem"
+                  >
+                    {item.summary}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+          {/* Color Display */}
+          <div
+            onClick={handleColorClick}
+            className=" ml-[2.5rem] flex w-[6rem] cursor-pointer items-center justify-center rounded-[0.5rem] bg-white mobile:ml-[2.125rem] mobile:w-[5.1rem] mobile:rounded-[0.425rem]"
+          >
+            {/* Default View */}
+            <div
+              style={{ backgroundColor: calendarColorCode }}
+              id="colorDisplay"
+              className="m-[0.3rem] h-[1.8rem] w-[1.8rem] rounded-[0.9rem] mobile:m-[0.255rem] mobile:h-[1.53rem] mobile:w-[1.53rem]"
+            ></div>
+            <img
+              src={DropdownArrow}
+              alt="^"
+              className="ml-[0.3rem] w-[1rem] mobile:ml-[0.255rem] mobile:w-[0.85rem]"
+            />
+            {/* Mobile View */}
+            {window.innerWidth <= 600 && userData && (
+              <div
+                style={{
+                  height: `${colorData.length * 2 * 3.7}rem`,
+                  display: colorVis,
+                }}
+                className="absolute right-[1.3rem] hidden w-[20rem] flex-col rounded-[1rem] bg-[#21272D]"
+              >
+                {colorData.map((item, index) => (
+                  <div key={index}>
+                    {Object.entries(item).map((name, color) => (
+                      <>
+                        {!(index === 0 && color === 0) && (
+                          <div className="mt-[1rem] h-[0.025rem] w-[20rem] bg-off-white opacity-50"></div>
+                        )}
+                        <div
+                          onClick={mobileColorSelection}
+                          className="ml-[2.6rem] mt-[1rem] flex w-[15.8rem] items-center justify-between"
+                        >
+                          <span className="font-poppins text-[1.1rem] font-medium text-off-white">
+                            {name[0]}
+                          </span>
+                          <div
+                            style={{
+                              backgroundColor: name[1],
+                            }}
+                            className="h-[1.1rem] w-[1.1rem] rounded-[0.2rem]"
+                          ></div>
+                        </div>
+                      </>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            )}
+            {/* Desktop View */}
+            {window.innerWidth >= 600 && colorData && (
               <div id="colorPopUp" style={{ display: colorVis }}>
                 <div id="colorContainer">
                   {colorData.map((item, index) => (
@@ -235,18 +332,18 @@ const Form = ({ updateFormData, complete }) => {
                   ))}
                 </div>
               </div>
-            </div>
+            )}
           </div>
-
-          <textarea
-            className="mt-[25px] h-[176px] rounded-[5px] border-none bg-white pl-[8px] pt-[13px] font-roboto text-[14px] font-medium text-g-font outline-none"
-            value={descriptionInput}
-            onChange={handleDescriptionChange}
-            placeholder="Add description"
-          ></textarea>
         </div>
+
+        <textarea
+          className="mt-[2.5rem] h-[17.6rem] rounded-[0.5rem] border-none bg-white pl-[0.8rem] pt-[1.3rem] font-roboto text-[1.4rem] font-medium text-g-font outline-none mobile:mt-[2.125rem] mobile:h-[14.96rem] mobile:rounded-[0.425rem] mobile:pl-[0.68rem] mobile:pt-[1.105rem] mobile:text-[1.19rem]"
+          value={descriptionInput}
+          onChange={handleDescriptionChange}
+          placeholder="Add description"
+        ></textarea>
       </div>
-    </>
+    </div>
   );
 };
 

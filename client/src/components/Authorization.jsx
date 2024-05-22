@@ -49,11 +49,11 @@ export default function Authorization() {
       <div
         onClick={() => fetchAuthUrl()}
         id="authorize_button"
-        className="ml-[154px] mt-[55px] flex h-[50px] w-[250px] cursor-pointer items-center justify-center rounded-[100px] bg-off-white px-[18px] py-[12px]"
+        className="mobile:ml-0 mobile:mt-[3.2rem] ml-[15.4rem] mt-[5.5rem] flex h-[5rem] w-[25rem] cursor-pointer items-center justify-center rounded-[10rem] bg-off-white px-[1.8rem] py-[1.2rem]"
       >
-        <div className="flex h-[50px] w-[214px] items-center justify-between">
-          <img src={Google} alt="/" />
-          <span className="font-poppins font-semibold">
+        <div className="flex h-[5rem] w-[21.4rem] items-center justify-between">
+          <img className="w-[2.4rem]" src={Google} alt="/" />
+          <span className="font-poppins text-[1.6rem] font-semibold">
             Continue With Google
           </span>
         </div>

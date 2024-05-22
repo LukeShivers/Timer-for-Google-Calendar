@@ -1,9 +1,12 @@
+# Client Dependencies
 client/node_modules/
 client/.eslintrc.cjs
 client/.prettierrc
 
+# Server Dependencies
 server/node_modules/
+
+# Misc
+.vscode
 server/.env
 .DS_Store
-
-.vscode
