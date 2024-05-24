@@ -8,15 +8,12 @@ import "./styles.css";
 const Navbar = () => {
   const { auth, setAuth } = useAuth();
   const navigate = useNavigate();
+
   const [mobile, setMobile] = useState(false);
 
   function signOutClick() {
     setAuth(false);
     navigate("/");
-  }
-
-  function handleMobile() {
-    setMobile(!mobile);
   }
 
   return (
@@ -42,16 +39,17 @@ const Navbar = () => {
           </div>
         </a>
         <div
-          id="signoutBtn"
           onClick={signOutClick}
-          className="ml-[5rem] flex h-[4rem] w-[10.5rem] cursor-pointer items-center justify-center rounded-[0.8rem] border-[0.15rem] border-solid border-light-grey font-poppins text-[1.6rem] font-normal text-light-grey"
-          style={auth ? { display: "visible" } : { display: "none" }}
+          className="ml-[5rem] h-[4rem] w-[10.5rem] cursor-pointer items-center justify-center rounded-[0.8rem] border-[0.15rem] border-solid border-light-grey"
+          style={auth ? { display: "flex" } : { display: "none" }}
         >
-          Sign Out
+          <span className="font-poppins text-[1.6rem] font-normal text-light-grey">
+            Sign Out
+          </span>
         </div>
       </div>
       <div
-        onClick={handleMobile}
+        onClick={() => setMobile(!mobile)}
         className="absolute right-0 opacity-0 mobile:opacity-100"
       >
         <span

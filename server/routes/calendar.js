@@ -18,6 +18,7 @@ const calendar = google.calendar({
   auth: oAuth2Client,
 });
 
+// Google Calendar API User Data Scope
 /*
 async function getUserData(access_token) {
   try {
@@ -37,31 +38,31 @@ router.post("/", async (req, res) => {
   res.header("Referrer-Policy", "no-referrer-when-downgrade");
 
   try {
-    // Set Credentials
     const tokenModel = req.body.token;
     await oAuth2Client.setCredentials(tokenModel);
-
-    // Get Calendar Data
     const calList = await calendar.calendarList.list();
     const calendars = calList.data.items;
+    // console.log(calendars);
 
-    // Scrape useful data
     let array = [];
     calendars.forEach((element) => {
-      array.push({
-        summary: element.summary,
-        backgroundColor: element.backgroundColor,
-        accessRole: element.accessRole,
-        primary: element.primary,
-      });
+      if (element.accessRole == "owner") {
+        array.push({
+          id: element.id,
+          summary: element.summary,
+          colorId: element.colorId,
+          backgroundColor: element.backgroundColor,
+          accessRole: element.accessRole,
+          primary: element.primary,
+        });
+      }
     });
 
-    // Submit filtered data
     res.status(200).json({
       data: array,
     });
   } catch (err) {
-    res.status(500).json({ error: "Internal /calendar Server Error" });
+    res.status(500).json({ error: `Internal /calendar Server Error: ${err}` });
   }
 });
 
@@ -75,7 +76,7 @@ router.post("/create", (req, res) => {
     const iananTimeZone = DateTime.local().zoneName;
 
     const event = {
-      summary: client.title,
+      summary: client.summary,
       description: client.description,
       start: {
         dateTime: client.startTime,
@@ -89,12 +90,12 @@ router.post("/create", (req, res) => {
 
     calendar.events.insert(
       {
-        calendarId: "primary",
+        calendarId: client.calendarId,
         resource: event,
       },
       function (err, event) {
         if (err) {
-          console.log(
+          console.error(
             "There was an error contacting the Calendar service: " + err
           );
           return;
@@ -103,11 +104,13 @@ router.post("/create", (req, res) => {
       }
     );
 
-    res.json({
-      data: "successful return",
+    res.status(200).json({
+      data: "event creation: successful",
     });
   } catch (err) {
-    res.status(500).json({ error: "Internal /calendar/create Server Error" });
+    res
+      .status(500)
+      .json({ error: `Internal /calendar/create Server Error: ${err}` });
   }
 });
 

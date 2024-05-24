@@ -1,10 +1,16 @@
 import { Outlet } from "react-router-dom";
+import Navbar from "../components/Navbar.jsx";
+import Social from "../components/Social.jsx";
+import Footer from "../components/Footer.jsx";
 
 const Layout = () => {
   return (
-    <main className="absolute w-screen overflow-hidden bg-dark">
+    <div className="absolute w-screen overflow-hidden bg-dark">
+      <Navbar />
       <Outlet />
-    </main>
+      <Social />
+      <Footer />
+    </div>
   );
 };
 

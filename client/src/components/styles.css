@@ -26,52 +26,6 @@ Form
 --------------------------------------------
 */
 
-/* Save / Edit Button */
-
-.buttonSave {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: var(--green);
-  width: 8rem;
-  height: 3.7rem;
-  margin-left: 8.3rem;
-  border-radius: 0.5rem;
-  cursor: pointer;
-}
-
-.buttonEdit {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: var(--light-dark);
-  border: 0.1rem solid var(--off-white);
-  width: 8rem;
-  height: 3.7rem;
-  margin-left: 8.3rem;
-  border-radius: 0.5rem;
-  cursor: pointer;
-}
-
-@media screen and (max-width: 600px) {
-  .buttonSave {
-    width: 6.8rem;
-    height: 3.145rem;
-    margin-left: 7.055rem;
-    border-radius: 0.425rem;
-  }
-
-  .buttonEdit {
-    border: 0.085rem solid var(--off-white);
-    width: 6.8rem;
-    height: 3.145rem;
-    margin-left: 7.055rem;
-    border-radius: 0.425rem;
-  }
-}
-
 /* Input Blue Line */
 
 .inactive {
@@ -84,8 +38,8 @@ Form
 
 .active {
   background-color: var(--blue);
-  height: 0.15rem;
   opacity: 100%;
+  height: 0.15rem;
   margin: 0 0.8rem;
   transition: all 0.2s ease-out;
 }
@@ -104,16 +58,6 @@ Form
   animation: popUpLoad 0.1s ease-out forwards;
   transform: scaleY(0.75);
   padding: 0.8rem 0;
-}
-
-@keyframes popUpLoad {
-  0% {
-    transform: scaleY(0.85);
-  }
-
-  100% {
-    transform: scaleY(1);
-  }
 }
 
 .calendarListItem {
@@ -175,64 +119,12 @@ Form
   cursor: pointer;
 }
 
-/*
---------------------------------------------
-Clock 
---------------------------------------------
-*/
+@keyframes popUpLoad {
+  0% {
+    transform: scaleY(0.85);
+  }
 
-.start-btn {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 19.8rem;
-  height: 5rem;
-  background-color: var(--green);
-  border-radius: 0.8rem;
-  margin-top: 5rem;
-  cursor: pointer;
-}
-
-.stop-btn {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 19.8rem;
-  height: 5rem;
-  background-color: var(--red);
-  border-radius: 0.8rem;
-  margin-top: 5rem;
-  cursor: pointer;
-}
-
-.title-line {
-  width: 33.4rem;
-  height: 0.05rem;
-  margin-left: 0.8rem;
-  background-color: var(--light-dark);
-  opacity: 25%;
-}
-
-.activeAdd {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: var(--blue);
-  border-radius: 0.8rem;
-  width: 25.9rem;
-  height: 5rem;
-  margin-top: 5rem;
-  cursor: pointer;
-}
-
-.inactiveAdd {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: var(--light-dark);
-  border-radius: 0.8rem;
-  width: 25.9rem;
-  height: 5rem;
-  margin-top: 5rem;
-  cursor: pointer;
+  100% {
+    transform: scaleY(1);
+  }
 }

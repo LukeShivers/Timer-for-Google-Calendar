@@ -1,42 +1,37 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
-const dotenv = require('dotenv')
-dotenv.config()
-const {google} = require('googleapis');
+const dotenv = require("dotenv");
+dotenv.config();
+const { google } = require("googleapis");
 
+router.post("/", async function (req, res) {
+  try {
+    res.header("Access-Control-Allow-Origin", "http://localhost:5173"); // Block CORS
+    res.header("Referrer-Policy", "no-referrer-when-downgrade");
 
-router.post('/', async function(req, res, next) {
-    try {
-        res.header('Access-Control-Allow-Origin', 'http://localhost:5173')      // Block CORS
-        res.header('Referrer-Policy', 'no-referrer-when-downgrade')
+    const oAuth2Client = new google.auth.OAuth2(
+      process.env.CLIENT_ID,
+      process.env.CLIENT_SECRET,
+      "http://localhost:5173"
+    );
 
+    const scopes = [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/userinfo.profile",
+    ];
 
-        const oAuth2Client = new google.auth.OAuth2(
-            process.env.CLIENT_ID,
-            process.env.CLIENT_SECRET,
-            'http://localhost:5173',
-        )
-        
+    const authorizeUrl = oAuth2Client.generateAuthUrl({
+      access_type: "offline",
+      scope: scopes,
+      prompt: "consent",
+    });
 
-        const scopes = [
-            "https://www.googleapis.com/auth/calendar",
-            "https://www.googleapis.com/auth/userinfo.profile" 
-        ]
-
-
-        const authorizeUrl = oAuth2Client.generateAuthUrl({
-            access_type: "offline",
-            scope: scopes,
-            prompt: 'consent'
-        });
-
-        
-        res.json({
-            url: authorizeUrl,
-        });
-    } catch (error) {
-        console.error('A requests.js error happened: ', error);
-    }
-})
+    res.status(200).json({
+      url: authorizeUrl,
+    });
+  } catch (err) {
+    res.status(500).json({ error: "A requests.js error happened" });
+  }
+});
 
 module.exports = router;

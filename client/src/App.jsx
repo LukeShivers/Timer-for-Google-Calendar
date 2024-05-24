@@ -12,7 +12,7 @@ export default function App() {
         {/* Pulic Route */}
         <Route path="/" element={<Home />} />
 
-        {/* Private Route */}
+        {/* Protected Route */}
         <Route element={<RequireAuth />}>
           <Route path="/timer" element={<Timer />} />
         </Route>
